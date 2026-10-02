@@ -77,48 +77,31 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/product-api:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/product-api:${{ github.sha }}
+
   deploy:
-      needs: docker
-      runs-on: self-hosted
+    needs: docker
+    runs-on: self-hosted
 
-      steps:
-        - name: Checkout source code
-          uses: actions/checkout@v4
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
 
-        - name: Pull latest Docker images
-          shell: cmd
-          run: |
-            docker compose -f docker-compose-prod.yaml pull
+      - name: Pull latest Docker images
+        shell: cmd
+        run: |
+          docker compose -f docker-compose-prod.yaml pull
 
-        - name: Deploy Product API
-          shell: cmd
-          run: |
-            docker compose -f docker-compose-prod.yaml up -d
+      - name: Deploy Product API and wait for health
+        shell: cmd
+        run: |
+          docker compose -f docker-compose-prod.yaml up -d --wait
 
-        - name: Wait for Product API healthcheck
-          shell: cmd
-          run: |
-            setlocal EnableDelayedExpansion
-            set STATUS=starting
+      - name: Check Product API health
+        shell: cmd
+        run: |
+          docker inspect -f "{{.State.Health.Status}}" product-api-prod
 
-            for /L %%i in (1,1,30) do (
-              for /F "delims=" %%s in ('docker inspect -f "{{.State.Health.Status}}" product-api-prod 2^>nul') do set STATUS=%%s
-
-              echo Product API health status: !STATUS!
-
-              if "!STATUS!"=="healthy" (
-                echo Product API is healthy.
-                exit /b 0
-              )
-
-              timeout /t 2 /nobreak >nul
-            )
-
-            echo Product API did not become healthy.
-            docker compose -f docker-compose-prod.yaml ps
-            exit /b 1
-
-        - name: Show production containers
-          shell: cmd
-          run: |
-            docker compose -f docker-compose-prod.yaml ps
+      - name: Show production containers
+        shell: cmd
+        run: |
+          docker compose -f docker-compose-prod.yaml ps
