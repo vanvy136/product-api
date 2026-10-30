@@ -1,0 +1,38 @@
+Để thực hiện làm các bài tập Prompt chấm điểm và Project CAB-SYSTEM thì sinh viên cần cài đặt sẵn
+
+Phần mềm cần thiết: Visual Studio Code, Git và Docker Engine
+Tài khoản: Github và Docker Hub
+
+Bài tập PROMPT 1: CI/CD
+
+Thực hiện các PROMPT theo tuần tự
+
+1. Xóa hết các thông tin nhớ về product-api trước đó. Thiết lập hướng dẫn mức cơ bản và diễn giải cụ thể từng bước. Sau mỗi hướng dẫn thì AI kiểm tra và đánh giá khách quan.
+
+2. Tạo mới repository rỗng mang tên product-api trên github
+
+3. Sử dụng git bash terminal trong VS Studio Code để clone về máy.
+
+4. Kết nối Docker Desktop với Visual Studio Code.
+
+5. Từ terminal trong VS Studio Code tạo container mongodb cơ bản trên Docker Engine với tên nammongodb
+
+6. Tạo ứng dụng Restful api CRUD cho Product có (pid, pname, price, quantity) có sử dụng Mongoose cho MongoDB. Sau đó, kết nối ứng dụng api từ VS Studio Code đến container nammongodb trên Docker Engine. Các thông tin cấu hình đặt trong .env
+
+7. Tiến hành Dockerize cho product-api
+
+8. Sử dụng Docker Compose
+
+9. Thêm healthcheck cho MongoDB + Product API
+
+10. Viết .github/workflows/test-productci.yml đơn giản test thử nghiệm cho CI pipeline
+
+11. Viết .github/workflows/test-productci-prod.yml tạo test cho workflow CI phù hợp với phiên bản triển khai sản phẩm thực tế CRUD của product-api có liên kết mongodb trên máy ảo github.
+
+12. Tiến hành thực hiện CD với Docker Hub. Đảm bảo healthcheck trong bước CI.
+
+13. Tạo thêm docker-compose-prod.yaml để chạy container từ Docker Hub trên local Docker Engine sau khi CD
+
+14. Tự động hóa quá trình CD: GitHub Actions → Docker Hub → Local Docker Engine
+
+
